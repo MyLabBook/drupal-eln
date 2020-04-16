@@ -11,10 +11,10 @@ To install this demo on your own server, follow these steps using your terminal 
 1. Clone this repository using git
 
 ``` bash
-git clone https://github.com/mylabbook/eln.git 
+git clone https://github.com/mylabbook/mylabbook.git 
 ```
 
-This will create a subdirectory on your server called eln
+This will create a subdirectory on your server called mylabbook
 
 2. Create an empty MySQL or equivalent database (e.g. MariaDB). In these instructions we will call the database elndb.
 
@@ -26,7 +26,7 @@ This will create a subdirectory on your server called eln
 
 Where {username} is the username for your mysql server and {password} is the password for your {username} and {elndb} is the name of the database that you created.
 
-4. Now open the domain that you created for this installation, e.g. eln.localhost.
+4. Now open the domain that you created for this installation, e.g. mylabbook.localhost.
 
 5. You should see the standard installation screens for installing Drupal. Choose the standard installation.
 
