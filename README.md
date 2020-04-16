@@ -32,7 +32,7 @@ Where {username} is the username for your mysql server and {password} is the pas
 
 6. When it asks you for the database, use the database that you created (e.g. elndb) and the username and password for the database.
 
-7. You should then see a screen that says that your application is created. This will be using the data from the database that you just created (e.g. elndb).
+7. You should then see a screen that says **Drupal already installed**. This will be using the data from the database that you just created (e.g. elndb). There should also be a link to **View your existing site**. Click on the existing site link to view your new ELN. 
 
 **At this point, you should have a fully working Drupal based ELN that you can modify and update as desired.**
 
