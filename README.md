@@ -18,7 +18,7 @@ This will create a subdirectory on your server called mylabbook
 
 2. Create an empty MySQL or equivalent database (e.g. MariaDB). In these instructions we will call the database elndb.
 
-3. In the eln/dbsql subdirectory you should see the elndb.sql file. Use that file to populate the database you just created. For example, on the command line you can do the following.
+3. In the mylabbook/dbsql subdirectory you should see the elndb.sql file. Use that file to populate the database you just created. For example, on the command line you can do the following.
 
 ``` bash
    mysql -u {username} -p {password} {elndb} < elndb.sql
