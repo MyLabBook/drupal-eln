@@ -1,0 +1,5 @@
+user_protection:
+  label: User protection
+  description: A plugin that protects an operation on, or a field of an user.
+  plugin_manager_service_id: plugin.manager.userprotect.user_protection
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator

@@ -1,0 +1,11 @@
+name: Geocoder
+description: An API to geocode and reverse geocode data into other GIS data types.
+core_version_requirement: ^8 || ^9
+type: module
+package: Geocoding
+configure: geocoder.settings
+
+# Information added by Drupal.org packaging script on 2020-04-14
+version: '8.x-2.12'
+project: 'geocoder'
+datestamp: 1586899593

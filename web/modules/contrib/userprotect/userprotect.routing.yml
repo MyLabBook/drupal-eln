@@ -1,0 +1,40 @@
+userprotect.rule_list:
+  path: '/admin/config/people/userprotect'
+  defaults:
+    _entity_list: 'userprotect_rule'
+    _title: 'User protect'
+  requirements:
+    _permission: 'userprotect.administer'
+
+userprotect.rule_add:
+  path: '/admin/config/people/userprotect/add'
+  defaults:
+    _entity_form: userprotect_rule.add
+    _title: 'Add protection rule'
+  requirements:
+    _permission: 'userprotect.administer'
+
+userprotect.rule_add_type:
+  path: '/admin/config/people/userprotect/add/{protected_entity_type_id}'
+  defaults:
+    _entity_form: userprotect_rule.add
+    _title: 'Add protection rule'
+    protected_entity_type_id: user_role
+  requirements:
+    _permission: 'userprotect.administer'
+
+entity.userprotect_rule.edit_form:
+  path: '/admin/config/people/userprotect/manage/{userprotect_rule}'
+  defaults:
+    _entity_form: userprotect_rule.edit
+    _title: 'Edit protection rule'
+  requirements:
+    _permission: 'userprotect.administer'
+
+entity.userprotect_rule.delete_form:
+  path: '/admin/config/people/userprotect/manage/{userprotect_rule}/delete'
+  defaults:
+    _entity_form: userprotect_rule.delete
+    _title: 'Delete protection rule'
+  requirements:
+    _permission: 'userprotect.administer'

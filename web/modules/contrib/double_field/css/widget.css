@@ -1,0 +1,7 @@
+.double-field-widget-inline {
+  display: flex;
+}
+
+.double-field-widget-inline > div {
+  margin-right: 0.75em;
+}

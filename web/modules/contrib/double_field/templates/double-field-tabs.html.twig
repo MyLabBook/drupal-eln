@@ -1,0 +1,28 @@
+<div class="double-field-tabs">
+  <ul>
+    {% for delta, item in items %}
+      <li>
+        <a href="#double-field-tab-{{ delta }}">
+          {% if settings.first.prefix %}
+            <span class="double-field-prefix">{{ settings.first.prefix }}</span>
+          {% endif %}
+          {{ item.first }}
+          {% if settings.first.suffix %}
+            <span class="double-field-suffix">{{ settings.first.suffix }}</span>
+          {% endif %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% for delta, item in items %}
+  <div id="double-field-tab-{{ delta }}">
+    {% if settings.second.prefix %}
+      <span class="double-field-prefix">{{ settings.second.prefix }}</span>
+    {% endif %}
+    {{ item.second }}
+    {% if settings.second.suffix %}
+      <span class="double-field-suffix">{{ settings.second.suffix }}</span>
+    {% endif %}
+  </div>
+{% endfor %}
+</div>

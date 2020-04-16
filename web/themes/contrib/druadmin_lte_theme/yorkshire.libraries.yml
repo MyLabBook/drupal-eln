@@ -1,0 +1,37 @@
+base:
+  version: 1.x
+  js:
+    js/script.js: {}
+    lib/bootstrap/js/bootstrap.min.js: {}
+    lib/slimScroll/jquery.slimscroll.min.js: {}
+    lib/custom-event-polyfill.js: {}
+    lib/fastclick/fastclick.min.js: {}
+    lib/adminlte/js/app.min.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+styles:
+  css:
+    theme:
+      css/style.css: {}
+      css/print.css: { media: print }
+      lib/bootstrap/css/bootstrap.min.css: {}
+      https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css: { type: external, minified: true }
+      https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css: { type: external, minified: true }
+      lib/adminlte/css/AdminLTE.min.css: {}
+      lib/adminlte/css/skins/_all-skins.min.css: {}
+styles_rtl:
+  css:
+    theme:
+      lib/bootstrap/css/bootstrap.min.css: {}
+      css/rtl/AdminLTE-rtl.min.css: {}
+      css/print.css: { media: print }
+      css/rtl/skins/_all-skins-rtl.min.css: {}
+      css/rtl/bootstrap-rtl.min.css: {}
+      https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css: { type: external, minified: true }
+      https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css: { type: external, minified: true }
+      css/rtl/rtl.css: {}
+      

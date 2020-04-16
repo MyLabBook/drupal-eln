@@ -1,0 +1,45 @@
+name: Seventeen
+type: theme
+base theme: seven
+description: A simple one-column, tableless, fluid width administration theme.
+package: custom
+core: 8.x
+core_version_requirement: ^8 || ^9
+libraries:
+  - seventeen/global
+# Remove this when https://www.drupal.org/node/2856499 gets fixed.
+libraries-override:
+  system/base:
+    css:
+      component:
+        /core/themes/stable/css/system/components/system-status-counter.css: /core/themes/seven/css/components/system-status-counter.css
+        /core/themes/stable/css/system/components/system-status-report-counters.css: /core/themes/seven/css/components/system-status-report-counters.css
+        /core/themes/stable/css/system/components/system-status-report-general-info.css: /core/themes/seven/css/components/system-status-report-general-info.css
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        misc/vertical-tabs.css: false
+  core/jquery.ui:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+  core/jquery.ui.dialog:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/dialog.css: false
+  classy/dialog:
+    seven/seven.drupal.dialog
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+# Information added by Drupal.org packaging script on 2020-02-13
+version: '8.x-1.3'
+project: 'seventeen'
+datestamp: 1581609256

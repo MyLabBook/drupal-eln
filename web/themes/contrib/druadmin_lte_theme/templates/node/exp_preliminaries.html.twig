@@ -1,0 +1,67 @@
+{#
+/**
+ * @file
+ *
+ *
+ * Available variables:
+ *
+ * @see
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'clearfix',
+] %}
+
+<style>
+  .itemvalue-odd {
+    background-color: #D7D6E6;
+    padding-left: 5px;
+  }
+
+  .itemlabel {
+    background-color: #fafafa;
+    padding-left: 5px;
+  }
+</style>
+
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="node--content-container">
+
+    <p> &nbsp; </p>
+
+    <div{{ content_attributes.addClass('node--content') }}>
+
+      <pre><h4>Preparation</h4></pre>
+      <p>
+        {{ node.field_preparation.value | raw }}
+      </p>
+      <br>
+
+
+      <pre><h4>Guidelines</h4></pre>
+      <p>
+        {{ node.field_guidelines.value | raw }}
+      </p>
+      <br>
+
+
+      <pre><h4>Safety Warnings</h4></pre>
+      <p>
+        {{ node.field_safety_warnings.value | raw }}
+      </p>
+      <br>
+
+
+    </div>
+  </div>
+</article>

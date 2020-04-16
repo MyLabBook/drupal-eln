@@ -1,0 +1,15 @@
+userprotect_add_user_protection_rule_action:
+  route_name: userprotect.rule_add_type
+  title: 'Add user protection rule'
+  route_parameters:
+    protected_entity_type_id: user
+  appears_on:
+    - userprotect.rule_list
+
+userprotect_add_role_protection_rule_action:
+  route_name: userprotect.rule_add_type
+  title: 'Add role protection rule'
+  route_parameters:
+    protected_entity_type_id: user_role
+  appears_on:
+    - userprotect.rule_list

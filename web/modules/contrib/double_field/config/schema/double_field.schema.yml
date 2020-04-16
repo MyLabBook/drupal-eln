@@ -1,0 +1,222 @@
+# Storage schema.
+field.storage_settings.double_field:
+  type: mapping
+  label: Storage subfield settings
+  mapping:
+    storage:
+      type: mapping
+      label: Double Field storage settings
+      mapping:
+        first:
+          type: double_field_storage_subfield_settings
+        second:
+          type: double_field_storage_subfield_settings
+
+double_field_storage_subfield_settings:
+  type: mapping
+  label: Storage subfield settings
+  mapping:
+    type:
+      type: string
+      label: Type
+    maxlength:
+      type: integer
+      label: Max length
+    precision:
+      type: integer
+      label: Precision
+    scale:
+      type: integer
+      label: Scale
+    datetime_type:
+      type: string
+      label: Date type
+
+# Instance schema.
+field.field_settings.double_field:
+  type: mapping
+  label: Double Field settings
+  mapping:
+    first:
+      type: double_field_subfield_settings
+    second:
+      type: double_field_subfield_settings
+
+double_field_subfield_settings:
+  type: mapping
+  label: Subfield settings
+  mapping:
+    label:
+      type: label
+      label: Label
+    list:
+      type: boolean
+      label: Limit allowed values
+    allowed_values:
+      type: sequence
+      label: Allowed values
+      sequence:
+        type: mapping
+        mapping:
+          label:
+            type: string
+            label: Label
+          value:
+            # This actually can be some other scalar type.
+            type: string
+            label: Value
+    max:
+      type: integer
+      label: Maximal value
+    min:
+      type: integer
+      label: Minimal value
+    required:
+      type: boolean
+      label: Required
+    on_label:
+      type: string
+      label: On label
+    off_label:
+      type: string
+      label: Off label
+
+# Widget schema.
+field.widget.settings.double_field:
+  type: mapping
+  label: Double Field widget settings
+  mapping:
+    first:
+      type: double_field_widget_subfield_settings
+    second:
+      type: double_field_widget_subfield_settings
+    inline:
+      type: boolean
+      label: Display as inline element
+
+double_field_widget_subfield_settings:
+  type: mapping
+  label: Widget subfield settings
+  mapping:
+    type:
+      type: string
+      label: Type
+    label_display:
+      type: string
+      label: Label display
+    size:
+      type: integer
+      label: Size
+    placeholder:
+      type: string
+      label: Placeholder
+    label:
+      type: string
+      label: Label
+    cols:
+      type: integer
+      label: Cols
+    rows:
+      type: integer
+      label: Rows
+    prefix:
+      type: string
+      label: Prefix
+    suffix:
+      type: string
+      label: Suffix
+
+# Formatters schema.
+field.formatter.settings.double_field_unformatted_list:
+  type: double_field_formatter_settings
+
+field.formatter.settings.double_field_accordion:
+  type: double_field_formatter_settings
+
+field.formatter.settings.double_field_tabs:
+  type: double_field_formatter_settings
+
+field.formatter.settings.double_field_html_list:
+  type: double_field_formatter_settings
+  mapping:
+    list_type:
+      type: string
+      label: List type
+
+field.formatter.settings.double_field_details:
+  type: double_field_formatter_settings
+  mapping:
+    open:
+      type: boolean
+      label: Open
+
+field.formatter.settings.double_field_table:
+  type: double_field_formatter_settings
+  mapping:
+    number_column:
+      type: boolean
+      label: Number column
+    number_column_label:
+      type: string
+      label: Number column label
+    first_column_label:
+      type: string
+      label: First column label
+    second_column_label:
+      type: string
+      label: Second column label
+
+double_field_formatter_settings:
+  type: mapping
+  label: Formatter settings
+  mapping:
+    first:
+      type: double_field_formatter_subfield_settings
+    second:
+      type: double_field_formatter_subfield_settings
+    inline:
+      type: boolean
+      label: Inline
+
+double_field_formatter_subfield_settings:
+  type: mapping
+  label: Formatter subfield settings
+  mapping:
+    format_type:
+      type: string
+      label: Format type
+    link:
+      type: boolean
+      label: Link
+    hidden:
+      type: boolean
+      label: Hidden
+    prefix:
+      type: string
+      label: Prefix
+    suffix:
+      type: string
+      label: Suffix
+    decimal_separator:
+      type: string
+      label: Decimal marker
+    thousand_separator:
+      type: string
+      label: Thousand marker
+    scale:
+      type: integer
+      label: Scale
+
+# Default value schema.
+field.value.double_field:
+  type: mapping
+  label: Default value
+  mapping:
+    # Treat these values as strings. The actual subfield types depend on field
+    # storage configuration.
+    first:
+      type: string
+      label: First subfield
+    second:
+      type: string
+      label: Second subfield

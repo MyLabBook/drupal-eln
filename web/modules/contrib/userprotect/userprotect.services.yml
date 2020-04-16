@@ -1,0 +1,12 @@
+services:
+  plugin.manager.userprotect.user_protection:
+    class: Drupal\userprotect\Plugin\UserProtection\UserProtectionManager
+    parent: default_plugin_manager
+  userprotect.route_subscriber:
+    class: Drupal\userprotect\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  access_check.user_protect.role_access:
+    class: Drupal\userprotect\Access\UserProtectRoleAccessCheck
+    tags:
+      - { name: access_check, applies_to: _userprotect_role_access_check }

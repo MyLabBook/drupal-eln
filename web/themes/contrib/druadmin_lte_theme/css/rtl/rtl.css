@@ -1,0 +1,11 @@
+/*.sidebar-menu li a .fa-angle-left,
+.sidebar-menu li .label, .sidebar-menu li .badge {
+	margin-top: -15px !important;
+}*/
+
+[dir="rtl"] aside.main-sidebar ul.sidebar-menu .fa-angle-left.pull-right{
+	float:left !important;
+}
+[dir="rtl"] aside.main-sidebar ul.sidebar-menu .fa-angle-left.pull-right:before{
+	content: "\f105" !important;
+}

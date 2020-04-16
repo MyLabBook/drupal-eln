@@ -1,0 +1,10 @@
+global:
+  css:
+    theme:
+      css/theme.css: {weight: 100}
+  js:
+    js/seventeen.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.debounce
+    - core/drupal.debounce

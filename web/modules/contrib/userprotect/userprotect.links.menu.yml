@@ -1,0 +1,5 @@
+userprotect.rule_list:
+  title: User protect
+  parent: user.admin_index
+  description: 'Protect individual users and/or roles from editing operations.'
+  route_name: userprotect.rule_list

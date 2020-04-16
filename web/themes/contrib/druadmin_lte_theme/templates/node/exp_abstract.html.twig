@@ -1,0 +1,54 @@
+{#
+/**
+ * @file
+ *
+ *
+ * Available variables:
+ *
+ * @see
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'clearfix',
+] %}
+
+<style>
+  .itemvalue-odd {
+    background-color: #D7D6E6;
+    padding-left: 5px;
+  }
+
+  .itemlabel {
+    background-color: #fafafa;
+    padding-left: 5px;
+  }
+</style>
+
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="node--content-container">
+
+    <p> &nbsp; </p>
+
+    <div{{ content_attributes.addClass('node--content') }}>
+
+      <pre><h4>Abstract</h4></pre>
+      <p>
+        {{ node.body.value | raw }}
+      </p>
+      <br>
+
+
+
+    </div>
+  </div>
+</article>

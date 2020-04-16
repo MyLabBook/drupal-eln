@@ -1,0 +1,14 @@
+{
+  "name": "drupal/existing_values_autocomplete_widget",
+  "type": "drupal-module",
+  "description": "Provides a widget for text fields that supplies an autocomplete callback with any previously entered (existing) values for the field.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/existing_values_autocomplete_widget",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/existing_values_autocomplete_widget",
+    "source": "http://cgit.drupalcode.org/existing_values_autocomplete_widget"
+  },
+  "require": { }
+}

@@ -1,0 +1,300 @@
+/**
+ * Container.
+ */
+.content-header {
+  background: url(../images/bg.png);
+  position: relative;
+}
+
+.content-header:after {
+  content: "";
+  height: 1px;
+  width: 100%;
+  background: #a6a6a6;
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+}
+
+/**
+ * Tables.
+ */
+table {
+  border: solid 1px #bfbfba;
+}
+
+table th {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(229, 229, 229, 1) 100%);
+  padding: 5px 12px;
+  border: solid 1px #bfbfba;
+}
+table.dblog-event th {
+  background: #f5f5f5;
+}
+table th.select-all input {
+  vertical-align: middle;
+}
+
+tr.even {
+  background-color: #f5f5f5;
+}
+
+table#blocks {
+  border: none;
+}
+
+table#blocks tr.even {
+  background-color: inherit;
+}
+
+/* Remove underline. */
+th > a:after {
+  display: none;
+}
+
+/**
+ * Admin panel.
+ */
+ul.admin-list li a {
+  background-image: none;
+}
+ul.admin-list li a .label {
+  padding-left: 30px;
+  margin-left: -30px;
+  background: url(../images/bullet.png) no-repeat 0 center;
+}
+
+.admin-list.compact li a .label {
+  background-image: none;
+}
+
+.panel {
+  box-shadow: 1px 1px 1px #777;
+}
+
+/**
+ * Messages.
+ */
+div.messages {
+  display: none;
+  position: relative;
+}
+
+div.view-changed {
+  display: block;
+}
+
+div.messages .hide-message {
+  display: block;
+  position: absolute;
+  top: 3px;
+  right: 7px;
+  font-size: 18px;
+  opacity: .75;
+  cursor: pointer;
+}
+
+.hide-message:hover {
+  opacity: 1;
+  font-weight: bold;
+}
+
+/**
+ * Progress bar.
+ */
+.progress__track {
+  background-color: #f5f5f5;
+  margin-top: 30px;
+}
+
+.progress__bar {
+  background-image: url("../images/progress-bar.gif");
+  transition: width 1.5s ease-out;
+  padding: 0;
+  border-color: #777;
+}
+
+.progress__description {
+  margin-left: 7px;
+}
+
+.progress__percentage {
+  margin-right: 7px;
+}
+
+/**
+ * Container settings.
+ */
+.container-fixed-width .layout-container {
+  margin: 0 auto;
+  padding: 0 2.5em;
+}
+
+.container-width-680 .layout-container {
+  max-width: 680px;
+}
+
+.container-width-800 .layout-container {
+  max-width: 800px;
+}
+
+.container-width-920 .layout-container {
+  max-width: 920px;
+}
+
+.container-width-1040 .layout-container {
+  max-width: 1040px;
+}
+
+.container-width-1160 .layout-container {
+  max-width: 1160px;
+}
+
+.container-width-1280 .layout-container {
+  max-width: 1280px;
+}
+
+.container-width-1400 .layout-container {
+  max-width: 1400px;
+}
+
+.container-width-1520 .layout-container {
+  max-width: 1520px;
+}
+
+.container-width-1640 .layout-container {
+  max-width: 1640px;
+}
+
+.container-width-1760 .layout-container {
+  max-width: 1760px;
+}
+
+.container-width-1880 .layout-container {
+  max-width: 1880px;
+}
+
+.container-width-2000 .layout-container {
+  max-width: 2000px;
+}
+
+.container-width-2120 .layout-container {
+  max-width: 2120px;
+}
+
+.container-width-2240 .layout-container {
+  max-width: 2240px;
+}
+
+.container-width-2360 .layout-container {
+  max-width: 2360px;
+}
+
+/**
+ * Throbber.
+ */
+.js input.form-autocomplete.ui-autocomplete-loading {
+  background-image: url(../images/throbber.gif);
+  background-position: right .5% center;
+}
+
+.js input.throbbing {
+  background-position: 99.5% -18px;
+}
+
+.ajax-progress .throbber {
+  background-image: url(../images/throbber.gif);
+}
+
+/**
+ * Forms.
+ */
+select {
+  font-size: inherit;
+}
+
+/**
+ * Buttons.
+ */
+.button {
+  font-size: 100%;
+}
+.button.button--primary:not(.button-action) {
+  background-image: linear-gradient(180deg, #16a4f5 0px, #1597e5 60%, #158fdb 60.1%, #1583cb 100%);
+}
+.button.button--primary:not(.button-action):hover {
+  background-image: linear-gradient(180deg, #16a4f5 0px, #15a5f6 60%, #15a4f8 60.1%, #1894e4 100%);
+}
+.button--17 {
+  background-image: linear-gradient(180deg, #f8f8f8 0px, #f3f3f3 60%, #e6e6e6 60.1%, #d6d6d4 100%);
+  border-color: #d9d9d9 #d0d0d0 #a9a9a9;
+  border-style: solid;
+  border-width: 1px;
+  font-weight: 500;
+  letter-spacing: 0.25pt;
+  padding: 5px 16px;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.button--17:hover {
+  background-image: linear-gradient(180deg, #f8f8f8 0px, #f0f0f0 60%, #e0e0e0 60.1%, #cacaca 100%);
+  color: #212121;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.button--17:active {
+  background-image: linear-gradient(180deg, #f8f8f8 0px, #f0f0f0 60%, #e0e0e0 60.1%, #cacaca 100%);
+  border-color: #505050;
+  color: #000000;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.button--17:disabled,
+.button--17:disabled:hover {
+  background: #f3f3f3;
+  color: #777;
+  text-shadow: none;
+}
+
+.form-actions > .button-action {
+  background-image: linear-gradient(to bottom, #419ff1, #1076d5);
+  border: 1px solid #0048c8;
+  border-radius: 4px;
+  font-weight: normal;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.button-action:focus,
+.button-action:hover {
+  background-image: linear-gradient(to bottom, #59abf3, #2a93ef);
+  color: #fff;
+}
+
+.no-touchevents .button--small {
+  padding: 5px 15px;
+}
+
+/**
+ * Install page.
+ */
+.install-page {
+  background: #bfbfba;
+}
+
+/**
+ * Sticky buttons.
+ */
+.sticky-form-actions {
+  position: fixed;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-bottom: 0;
+  border-top: solid 1px #a6a6a6;
+  outline: solid 1px #fff;
+  background-color: #f8f8f8;
+  z-index: 100;
+}

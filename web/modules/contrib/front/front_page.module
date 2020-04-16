@@ -1,0 +1,186 @@
+<?php
+
+/**
+ * @file
+ * This module allows the site admin to set advanced front page settings.
+ *
+ * This version is for Drupal 8.
+ * Earlier versions can be found at http://drupal.org/project/front.
+ *
+ * If you have any ideas/patches or requests,
+ * please post them at http://drupal.org/project/issues/front.
+ */
+
+use Drupal\Core\Database\Database;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function front_page_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'front_page.settings':
+      return t('<p>Setup custom front pages for your site.</p>');
+
+    case 'help.page.front_page':
+      return t('<p>If a HOME link is set, the &lt;front&gt; placeholder will be replaced with this value instead of the standard front page.</p>');
+  }
+}
+
+/**
+ * Parse URL including GET and fragment.
+ *
+ * Function to parse a full URL including GET variables and fragment
+ * to an array ready for drupal_goto(), url(), or l() functions.
+ */
+function front_page_parse_url($path) {
+  $url['path'] = $path;
+  $url['options'] = [];
+  if (preg_match('@^(?P<path>[^?#]+)(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?$@', $path, $match)) {
+    $url['path'] = $match['path'];
+    if (!empty($match['query'])) {
+      foreach (explode('&', $match['query']) as $query_part) {
+        list($key, $value) = explode('=', $query_part);
+        $url['options']['query'][$key] = $value;
+      }
+    }
+    if (!empty($match['fragment'])) {
+      $url['options']['fragment'] = $match['fragment'];
+    }
+  }
+  return $url;
+}
+
+/**
+ * Function to return the first role enabled in front page, ordered by weight.
+ */
+function front_page_get_by_role($index = 0, $number = 1) {
+  $roles = \Drupal::currentUser()->getRoles();
+  $result = Database::getConnection()->select('front_page', 'fp')
+    ->fields('fp')
+    ->condition('rid', $roles, 'IN')
+    ->condition('mode', '', '<>')
+    ->orderBy('weight', 'ASC')
+    ->orderBy('rid', 'DESC')
+    ->range($index, $number)
+    ->execute()
+    ->fetchAssoc();
+  return $result;
+}
+
+/**
+ * Function to return the first role enabled in front page, ordered by weight.
+ */
+function front_page_get_by_rid($rid) {
+
+  $result = Database::getConnection()->select('front_page', 'fp')
+    ->fields('fp')
+    ->condition('rid', $rid)
+    ->condition('mode', '', '<>')
+    ->execute()
+    ->fetchAssoc();
+  return $result;
+}
+
+/**
+ * Function to return all the roles in front page, ordered by weight.
+ */
+function front_page_get_all() {
+  $result = Database::getConnection()->select('front_page', 'fp')
+    ->fields('fp')
+    ->orderBy('weight', 'ASC')
+    ->orderBy('rid', 'DESC')
+    ->execute()
+    ->fetchAllAssoc('rid', PDO::FETCH_ASSOC);
+  return $result;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function front_page_theme() {
+  return [
+    'front_page_admin_arrange_form' => [
+      'render element' => 'form',
+      'function' => 'theme_front_page_admin_arrange_form',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_user_role_delete().
+ */
+function front_page_user_role_delete($role) {
+  // Delete Front configuration for the role being deleted.
+  Database::getConnection()->delete('front_page')
+    ->condition('rid', $role->rid)
+    ->execute();
+}
+
+/**
+ * Returns HTML for the front page arrange form into a table.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @return string
+ *   Rendered admin form.
+ *
+ * @todo Refactor this function, it's a legacy way.
+ */
+function theme_front_page_admin_arrange_form($variables) {
+  $form = $variables['form'];
+
+  // Enable the drag handles.
+  drupal_attach_tabledrag($form['roles'], [
+    'table_id' => 'front-page-arrange',
+    'action' => 'order',
+    'relationship' => 'sibling',
+    'group' => 'front-page-weight',
+  ]);
+
+  $header = [
+    t('Role'),
+    t('Mode'),
+    t('Preview'),
+    t('Enabled'),
+    t('Weight'),
+  ];
+
+  $rows = [];
+  $renderer = \Drupal::service('renderer');
+  foreach (Element::children($form['roles']) as $rid) {
+    $element = &$form['roles'][$rid];
+
+    // Add special classes to be used for tabledrag.js.
+    $element['weight']['#attributes']['class'] = ['front-page-weight'];
+
+    $row = [];
+    $row[] = $renderer->render($element['title'], FALSE);
+    $row[] = $renderer->render($element['mode'], FALSE);
+    $row[] = $renderer->render($element['preview'], FALSE);
+    $row[] = $renderer->render($element['enabled'], FALSE);
+    $row[] = $renderer->render($element['weight'], FALSE);
+
+    $row = array_merge(['data' => $row], $element['#attributes']);
+    $row['class'][] = 'draggable';
+    $rows[] = $row;
+  }
+  $output = '';
+  if (empty($rows)) {
+    $rows[] = [['data' => 'no roles', 'colspan' => '5']];
+  }
+
+  $front_page_arrange = [
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    'attributes' => ['id' => 'front-page-arrange'],
+  ];
+  $output .= $renderer->render($front_page_arrange);
+  $output .= drupal_render_children($form);
+
+  return $output;
+}

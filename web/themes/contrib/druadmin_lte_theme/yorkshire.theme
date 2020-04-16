@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * See https://stackoverflow.com/questions/38464069/drupal-8-double-field-html
+ * The yorkshire_preprocess_double_field_item causes the HTML in the tag to
+ * be rendered as HTML rather than as just text
+ */
+use Drupal\Component\Render\FormattableMarkup;
+
+function yorkshire_preprocess_double_field_item(&$variables) {
+  $item = $variables['elements']['#item'];
+  $second_value = new FormattableMarkup($item->second, []);
+  $variables['item']['second'] = $second_value;
+}
+
+/*
+function yorkshire_preprocess_html(&$variables) {
+  $variables['skin'] = theme_get_setting('skin');
+}
+
+function yorkshire_preprocess_field_embedded_videos(&$variables) {
+  $variables['skin'] = theme_get_setting('skin');
+}
+*/
+
+
+
+function yorkshire_preprocess_page(&$variables) {
+  $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+  $variables['site_name'] = \Drupal::config('system.site')->get('name');
+  $variables['site_url'] = \Drupal::request()->getHost();
+  $picture = NULL;
+  if($user->hasField('user_picture')){
+    $picture = $user->get('user_picture')->entity;
+    if($picture)
+      $picture = $picture->url();
+    else{
+      $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'user_picture');
+      $default_image = $field->getSetting('default_image');
+      if($default_image['uuid']){
+        $file = \Drupal::entityManager()->loadEntityByUuid('file', $default_image['uuid']);
+        $picture = file_create_url($file->getFileUri());
+      }
+    }
+  }
+  $variables['user'] = [];
+  $variables['user']['uid'] =  $user->id();
+  $variables['user']['name'] = $user->getUsername();
+  $variables['user']['picture'] = $picture;
+  $variables['user']['created'] = $user->getCreatedtime();
+  $variables['relative_logo_url'] = file_url_transform_relative(file_create_url(theme_get_setting('logo.url')));
+}
+
+function yorkshire_preprocess_block(&$variables) {
+  $variables['favicon'] = theme_get_setting('favicon.url');
+}
+
+function yorkshire_preprocess_menu(&$variables) {
+  $icon_setting = explode("\n",theme_get_setting('menu_icons'));
+  $icons = [];
+  for($i = 0; $i < sizeof($icon_setting); $i++){
+    $icon_setting[$i] = explode('|',$icon_setting[$i]);
+    if(array_key_exists($i,$icon_setting) && sizeof($icon_setting[$i]) >= 2){
+      $icons[$icon_setting[$i][0]] = $icon_setting[$i][1];
+    }
+  }
+  foreach ($variables['items'] as $id => $item){
+    $title = (string)$item['title'];
+    if(array_key_exists($title,$icons) && $icons[$title]){
+      $variables['items'][$id]['icon'] = $icons[$title];
+    }
+  }
+}
+
+function yorkshire_form_system_theme_settings_alter(&$form, $form_state) {
+  $form['skin'] = array(
+    '#type'          => 'select',
+    '#title'         => t('yorkshire Skin'),
+    '#options' => array(
+     "black" => t('Black'),
+     "black-light" => t('Black - Light'),
+     "blue" => t('Blue'),
+     "blue-light" => t('Blue - Light'),
+     "green" => t('Green'),
+     "green-light" => t('Green - Light'),
+     "purple" => t('Purple'),
+     "purple-light" => t('Purple - Light'),
+     "red" => t('Red'),
+     "red-light" => t('Red - Light'),
+     "yellow" => t('Yellow'),
+     "yellow-light" => t('Yellow - Light'),
+    ),
+    '#default_value' => theme_get_setting('skin')
+  );
+  $form['menu_icons'] = array(
+    '#type'          => 'textarea',
+    '#title'         => t('Menu Icons'),
+    '#default_value' => theme_get_setting('menu_icons'),
+    '#description'   => t("<a href='https://fortawesome.github.io/Font-Awesome/icons/' target='_blank'>Font Awesome</a> icon class with associated menu item. One per line. Format: Menu link title|class")
+  );
+}
+
+function yorkshire_preprocess_breadcrumb(&$variables){
+   if($variables['breadcrumb']){
+     $request = \Drupal::request();
+      if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
+        $variables['breadcrumb'][] = array(
+          'text' =>  \Drupal::service('title_resolver')->getTitle($request, $route)
+        );
+      }
+   }
+}
+
+function yorkshire_preprocess_menu_local_action(&$variables) {
+  $link = $variables['element']['#link'];
+  $link += array('localized_options' => array());
+  $link['localized_options']['attributes']['class'][] = 'btn';
+  $link['localized_options']['attributes']['class'][] = 'btn-block';
+  $link['localized_options']['attributes']['class'][] = 'btn-primary';
+  $link['localized_options']['attributes']['class'][] = 'fa';
+  $link['localized_options']['attributes']['class'][] = 'fa-plus';
+
+  $variables['link'] = array(
+    '#type' => 'link',
+    '#title' => ' '.$link['title'],
+    '#options' => $link['localized_options'],
+    '#url' => $link['url'],
+  );
+}
+
+function yorkshire_theme_suggestions_region_alter(&$suggestions,&$variables) {
+  if(in_array("region__content",$suggestions)){
+  	$page_manager_page = \Drupal::routeMatch()->getRouteObject()->getDefault('page_manager_page');
+  	if($page_manager_page){
+  		$suggestions[] = 'region__page_manager_page_content';
+  		$suggestions[] = 'region__page_'.$page_manager_page.'_content';
+  	}
+  }
+}
+
+function yorkshire_theme_suggestions_block_alter(&$suggestions,&$variables) {
+  if(in_array("block__system_main_block",$suggestions)){
+    $page_manager_page = \Drupal::routeMatch()->getRouteObject()->getDefault('page_manager_page');
+    if($page_manager_page){
+      $suggestions[] = 'block__page_manager_page_system_main';
+      $suggestions[] = 'block__page_'.$page_manager_page.'_system_main';
+    }
+  }else if(array_key_exists('elements',$variables)
+  && array_key_exists('#cache',$variables['elements'])
+  && array_key_exists('keys',$variables['elements']['#cache'])
+  && in_array("page_manager_block_display",$variables['elements']['#cache']['keys'])){
+    $suggestions[] = 'block__page_manager_page_block';
+    $type = $variables['elements']['content']['#block_content'] ?
+      $variables['elements']['content']['#block_content']->bundle()
+      : $variables['elements']['#configuration']['id'];
+    $suggestions[] = 'block__page_manager_page_'.$type;
+  }
+}

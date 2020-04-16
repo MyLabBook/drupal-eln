@@ -1,0 +1,15 @@
+# Schema for the tablefield module display settings.
+
+tablefield.settings:
+  type: config_object
+  label: 'Tablefield display format settings'
+  mapping:
+    csv_separator:
+      type: string
+      label: "separator"
+    rows:
+      type: integer
+      label: "Number of rows"
+    cols:
+      type: integer
+      label: "Number of columns"

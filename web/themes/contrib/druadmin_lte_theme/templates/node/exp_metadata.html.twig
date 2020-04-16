@@ -1,0 +1,86 @@
+{#
+/**
+ * @file
+ *
+ *
+ * Available variables:
+ *
+ * @see
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'clearfix',
+] %}
+
+<style>
+  .itemvalue-odd {
+    background-color: #D7D6E6;
+    padding-left: 5px;
+  }
+
+  .itemlabel {
+    background-color: #fafafa;
+    padding-left: 5px;
+  }
+</style>
+
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="node--content-container">
+
+    <div{{ content_attributes.addClass('node--content') }}>
+
+      <p> &nbsp; </p>
+
+
+      <pre><h4>Keywords</h4></pre>
+      <p>
+
+        {% set first = true %}
+        {% for keyword in node.field_keywords %}
+
+          {% if first == false %}
+            {{ " , " }}
+          {% else %}
+            {% set first = false %}
+          {% endif %}
+
+          {{ keyword.value }}
+
+        {% endfor %}
+      </p>
+      <br>
+
+      <pre><h4>License</h4></pre>
+      <p>
+        {{ node.field_license.value | raw }}
+      </p>
+      <br>
+
+
+      <pre><h4>DOI</h4></pre>
+      <p>
+      <a href="{{ node.field_doi.0.url }}" target="_blank">{{ node.field_doi.0.title }}</a>
+      </p>
+      <br>
+
+
+      <pre><h4>Citation</h4></pre>
+      <p>
+        {{ node.field_citation.value | raw }}
+      </p>
+      <br>
+
+
+    </div>
+  </div>
+</article>

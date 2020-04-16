@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Double Field module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function double_field_theme() {
+  $templates = [
+    'item',
+    'subfield',
+    'definition_list',
+    'accordion',
+    'tabs',
+  ];
+  $items = [];
+  foreach ($templates as $template) {
+    $items['double_field_' . $template] = ['render element' => 'elements'];
+  }
+  return $items;
+}
+
+/**
+ * Prepares variables for double-field-item template.
+ */
+function template_preprocess_double_field_item(&$vars) {
+  $vars['settings'] = $vars['elements']['#settings'];
+  $vars['item']['first'] = $vars['elements']['#item']->first;
+  $vars['item']['second'] = $vars['elements']['#item']->second;
+}
+
+/**
+ * Prepares variables for double-field-item template.
+ */
+function template_preprocess_double_field_subfield(&$vars) {
+  $elements = &$vars['elements'];
+  $vars['index'] = $index = $elements['#index'];
+  $vars['prefix'] = $elements['#settings'][$index]['prefix'];
+  $vars['value'] = $elements['#subfield'];
+  $vars['suffix'] = $elements['#settings'][$index]['suffix'];
+}
+
+/**
+ * Prepares variables for double-field-definition-list template.
+ */
+function template_preprocess_double_field_definition_list(&$vars) {
+  $vars['settings'] = $vars['elements']['#settings'];
+  $vars['items'] = $vars['elements']['#items'];
+}
+
+/**
+ * Prepares variables for double-field-accordion template.
+ */
+function template_preprocess_double_field_accordion(&$vars) {
+  $vars['settings'] = $vars['elements']['#settings'];
+  $vars['items'] = $vars['elements']['#items'];
+}
+
+/**
+ * Prepares variables for double-field-definition-tabs template.
+ */
+function template_preprocess_double_field_tabs(&$vars) {
+  $vars['settings'] = $vars['elements']['#settings'];
+  $vars['items'] = $vars['elements']['#items'];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function double_field_field_storage_config_update(EntityInterface $entity) {
+
+  /* @var \Drupal\field\Entity\FieldStorageConfig  $entity */
+  if ($entity->getType() == 'double_field') {
+    $settings = $entity->getSettings();
+    $original_settings = $entity->original->getSettings();
+
+    $first_type_is_changed = $settings['storage']['first']['type'] != $original_settings['storage']['first']['type'];
+    $second_type_is_changed = $settings['storage']['second']['type'] != $original_settings['storage']['second']['type'];
+
+    if ($first_type_is_changed || $second_type_is_changed) {
+      \Drupal::messenger()->addWarning(t('Since storage type has been changed you need to verify configuration of related widget on manage form display page.'));
+    }
+  }
+
+}
+
+/**
+ * Implements hook_validation_constraint_alter().
+ */
+function double_field_validation_constraint_alter(array &$definitions) {
+  // This constraint is required to test empty boolean values.
+  $definitions['NotEqualTo']['class'] = '\Symfony\Component\Validator\Constraints\NotEqualTo';
+}

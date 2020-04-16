@@ -1,0 +1,54 @@
+#logo img{
+  /*max-height: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);*/
+}
+#logo .logo-lg, #logo .logo-mini{
+  position:relative;
+  height:50px;
+}
+
+.login-box .logo-lg > img {
+  max-width: 100%;
+}
+
+@media (max-width: 767px){
+
+  body.skin-black #logo,
+  body.skin-black #logo:hover,
+  body.skin-black-light #logo,
+  body.skin-black-light #logo:hover
+  {
+    background-color:#fff;
+    border-bottom: 1px solid #eee;
+  }
+
+}
+.login-page-header.logo .logo-lg {
+  display: block;
+}
+.login-page-header.logo .logo-mini {
+  display: none;
+}
+
+body .label {
+  color: #333;
+  font-size: 80%;
+}
+
+a.tabledrag-handle .handle {
+  width: 24px;
+  height: 24px;
+}
+
+.box > .box-header > h4{
+  margin:0;
+}
+
+@media (max-width: 991px){
+  .content-header > h1.page-title{
+    margin-top:20px;
+  }
+}

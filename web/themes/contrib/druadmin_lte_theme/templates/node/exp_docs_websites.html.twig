@@ -1,0 +1,88 @@
+{#
+/**
+ * @file
+ *
+ *
+ * Available variables:
+ *
+ * @see
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'clearfix',
+] %}
+
+<style>
+  .itemvalue-odd {
+    background-color: #D7D6E6;
+    padding-left: 5px;
+  }
+
+  .itemlabel {
+    background-color: #fafafa;
+    padding-left: 5px;
+  }
+</style>
+
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="node--content-container">
+
+    <p> &nbsp; </p>
+
+    <div{{ content_attributes.addClass('node--content') }}>
+
+      <pre><h4>Documents</h4></pre>
+
+      <p>
+      <ul>
+        {% for doc in node.field_relevant_documents %}
+
+          {# set doc_label = doc.entity.label #}
+          {% set doc_description = doc.description %}
+          {% set doc_url = file_url(doc.entity.uri.value) %}
+
+          <li>
+            <a href="{{ doc_url }}" target="_blank">{{ doc_description }}</a>
+            <br>
+          </li>
+
+        {% endfor %}
+      </ul>
+      </p>
+
+
+      <pre><h4>Websites</h4></pre>
+      <p>
+
+      <ul>
+        {% for website in node.field_relevant_websites %}
+
+          {# kint(website) #}
+
+          {# set website_description = doc.description #}
+          {% set website_url = website[0]['#uri'] %}
+
+          <li>
+            <a href="{{ website_url }}" target="_blank">{{ website_url }}</a>
+            <br>
+          </li>
+
+        {% endfor %}
+      </ul>
+
+
+      </p>
+
+    </div>
+  </div>
+</article>

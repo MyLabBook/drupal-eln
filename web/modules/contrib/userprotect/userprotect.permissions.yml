@@ -1,0 +1,20 @@
+userprotect.mail.edit:
+  title: 'Change own e-mail'
+  description: 'Allow users to edit their own e-mail address.'
+userprotect.pass.edit:
+  title: 'Change own password'
+  description: 'Allow users to edit their own password.'
+userprotect.account.edit:
+  title: 'Change own account'
+  description: 'Allow users to edit their own account.'
+userprotect.bypass_all:
+  title: 'Bypass all user protections'
+  description: 'All user protections rules are ignored for users with this permission.'
+  restrict access: true
+userprotect.administer:
+  title: 'Administer User protect'
+  description: 'Set up access rules for user administrators for various user-related edits.'
+  restrict access: true
+
+permission_callbacks:
+  - Drupal\userprotect\UserProtectPermissions::permissions

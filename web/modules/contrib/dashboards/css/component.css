@@ -1,0 +1,11 @@
+.dashboard-component {
+  padding: .2em;
+}
+
+.ui-dialog-content.table.dashboard-table {
+  width: 100%;
+}
+
+.dashboard-table-link {
+  cursor: pointer;
+}

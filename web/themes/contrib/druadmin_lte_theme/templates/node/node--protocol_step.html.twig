@@ -1,0 +1,736 @@
+{#
+/**
+ * @file
+ *
+ *
+ * Available variables:
+ *
+ * @see
+ *
+ * @ingroup themeable
+ */
+#}
+
+
+{# Get the reference to the parent experiment #}
+{% set exp_name = node.field_parent_experiment.entity.title.value %}
+{% set exp_nid = node.field_parent_experiment.entity.nid.value %}
+{% set exp_status = node.field_parent_experiment.entity.field_completion_status.value %}
+
+<div class="row"
+     style="border: 3px solid #0a7bc1; padding-left: 10px; padding-right: 10px; padding-bottom: 20px;
+            background-color: #f4f4f4; margin-left: 15px; margin-right: 15px;">
+
+  <h3>The Experiment </h3>
+
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="card h-100" style="border: 4px solid #028ee1; background-color: #fff; ">
+
+        <div class="card-body"
+             style="text-align: center; margin-top: 20px; margin-bottom: 20px; margin-left: 15px; margin-right: 15px;">
+          <h3 class="card-title" style="text-align: center; margin-top: 10px;">
+            <a href="/node/{{ exp_nid }}"><b> {{ exp_name }} </b></a>
+          </h3>
+          <div style="text-align: center">
+            {% if (exp_status == 0) %}
+              Status: <b> Incomplete </b>
+            {% elseif (exp_status == 1) %}
+              Status: <b> Complete </b>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <h3>The Protocol Steps </h3>
+
+  <div class="row">
+
+    {% set step_num = 1 %}
+    {% for step in node.field_parent_experiment.entity.field_protocol_steps %}
+
+      <div class="col-md-4">
+        <div class="card h-100" style="border: 2px solid #028ee1; background-color: #fff; margin: 15px; ">
+
+          <div class="card-body"
+               style="text-align: center; margin-top: 20px; margin-bottom: 20px; margin-left: 15px; margin-right: 15px;">
+            <h4 class="card-title">
+              {% set step_name = step.entity.title.value %}
+              <a href="/node/{{ step.entity.nid.value }}">
+                <b> {{ step_num }}. {{ step_name }} </b>
+              </a>
+            </h4>
+            <div style="text-align: center">
+              {% if (step.entity.field_completion_status.value == 0) %}
+                Status: <b> Incomplete </b>
+              {% elseif (step.entity.field_completion_status.value == 1) %}
+                Status: <b> Complete </b>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% set step_num = step_num + 1 %}
+
+    {% endfor %}
+  </div>
+
+</div>
+
+
+<p>
+  {# content #} &nbsp;
+</p>
+
+
+<h2>Protocol Step: &nbsp; &nbsp; &nbsp; <b>  {{ node.title.value }} </b></h2>
+
+  {% if (node.field_completion_status.value == 0) %}
+    <h4><em>Overall Step Status: <b> Incomplete </b> </em></h4>
+  {% elseif (node.field_completion_status.value == 1) %}
+    <h4><em>Overall Step Status: <b> Complete </b> </em></h4>
+  {% endif %}
+
+  <hr>
+
+  {# Output the description/body #}
+  {{ node.body.value | raw }}
+
+<div class="tabs">
+
+  <ul class="nav nav-tabs">
+
+    {% if node.field_display_task_list.value == 1 %}
+      {% set taskListLabel = "Task List" %}
+      {% if node.field_tab_label_task_list.value is not empty %}
+        {% set taskListLabel = node.field_tab_label_task_list.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#tasklist" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ taskListLabel }} &nbsp; <i
+            class="fa fa-check"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_notes_in_rich_text.value == 1 %}
+      {% set notesLabel = "Notes in Rich Text" %}
+      {% if node.field_tab_label_rich_text_notes.value is not empty %}
+        {% set notesLabel = node.field_tab_label_rich_text_notes.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#notes" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ notesLabel }} &nbsp; <i
+            class="fa fa-italic"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_data_tables.value == 1 %}
+      {% set dataTableLabel = "Data Tables" %}
+      {% if node.field_tab_label_data_tables.value is not empty %}
+        {% set dataTableLabel = node.field_tab_label_data_tables.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#datatables" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ dataTableLabel }} &nbsp; <i
+            class="fa fa-database"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_location.value == 1 %}
+      {% set locationLabel = "Location" %}
+      {% if node.field_tab_label_location.value is not empty %}
+        {% set locationLabel = node.field_tab_label_location.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#location" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ locationLabel }} &nbsp; <i
+            class="fa fa-map-marker"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_file_uploads.value == 1 %}
+      {% set fileUploadsLabel = "Image & File Uploads" %}
+      {% if node.field_tab_label_file_uploads.value is not empty %}
+        {% set fileUploadsLabel = node.field_tab_label_file_uploads.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#uploads" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ fileUploadsLabel }} &nbsp; <i
+            class="fa fa-file"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_urls.value == 1 %}
+      {% set urlsLabel = "Web Sites" %}
+      {% if node.field_tab_label_urls.value is not empty %}
+        {% set urlsLabel = node.field_tab_label_urls.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#urls" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ urlsLabel }} &nbsp; <i class="fa fa-cloud"></i>
+        </a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_decimal_values.value == 1 %}
+      {% set decimalValuesLabel = "Decimal Values" %}
+      {% if node.field_tab_label_decimal_values.value is not empty %}
+        {% set decimalValuesLabel = node.field_tab_label_decimal_values.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#decimals" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ decimalValuesLabel }} &nbsp; <i
+            class="fa fa-calculator"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_integer_values.value == 1 %}
+      {% set integerValuesLabel = "Integer Values" %}
+      {% if node.field_tab_label_integer_values.value is not empty %}
+        {% set integerValuesLabel = node.field_tab_label_integer_values.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#integers" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ integerValuesLabel }} &nbsp; <i
+            class="fa fa-list-ol"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_float_values.value == 1 %}
+      {% set floatValuesLabel = "Float Values" %}
+      {% if node.field_tab_label_float_values.value is not empty %}
+        {% set floatValuesLabel = node.field_tab_label_float_values.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#floats" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ floatValuesLabel }} &nbsp; <i
+            class="fa fa-sliders"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_text_values.value == 1 %}
+      {% set textValuesLabel = "Text Values" %}
+      {% if node.field_tab_label_text_values.value is not empty %}
+        {% set textValuesLabel = node.field_tab_label_text_values.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#textvals" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ textValuesLabel }} &nbsp; <i
+            class="fa fa-text-height"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_date_values.value == 1 %}
+      {% set dateValuesLabel = "Date Values" %}
+      {% if node.field_tab_label_date_values.value is not empty %}
+        {% set dateValuesLabel = node.field_tab_label_date_values.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#datevals" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ dateValuesLabel }} &nbsp; <i
+            class="fa fa-calendar"></i></a>
+      </li>
+    {% endif %}
+
+    {% if node.field_display_videos.value == 1 %}
+      {% set videosLabel = "Videos" %}
+      {% if node.field_tab_label_videos.value is not empty %}
+        {% set videosLabel = node.field_tab_label_videos.value %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#videos" data-toggle="tab"> &nbsp; &nbsp; &nbsp; {{ videosLabel }} &nbsp; <i
+            class="fa fa-forward"></i></a>
+      </li>
+    {% endif %}
+
+  </ul>
+
+  {{ devel_breakpoint() }}
+
+  {{ breakpoint() }}
+
+  {# dump(_context|keys) #}
+
+  <div class="tab-content">
+
+
+    {# TASK LIST #}
+    <div id="tasklist" class="tab-pane active">
+
+      {# Output the heading according to the tab label #}
+      {% set taskListLabel = "Task List" %}
+      {% if node.field_tab_label_task_list.value is not empty %}
+        {% set taskListLabel = node.field_tab_label_task_list.value %}
+      {% endif %}
+      <center><h3> {{ taskListLabel }} </h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_task_list.value | raw }}
+      <hr>
+
+      {# Output the tasks one by one #}
+      {% set itemnum = 1 %}
+      {% for item in node.field_task_checklist %}
+
+        <b>Task {{ itemnum }} </b>
+        {% if item.value.first == 0 %}
+          {{ "(Not Complete) " | raw }}
+        {% else %}
+          {{ "<b>(Completed)</b> " | raw }}
+        {% endif %}
+        :
+        {{ item.value.second | raw }} <br>
+        <hr>
+        {% set itemnum = itemnum + 1 %}
+      {% endfor %}
+
+    </div>
+
+
+    {# RICH TEXT NOTES #}
+    <div id="notes" class="tab-pane">
+
+      {# Output the heading according to the tab label #}
+      {% set notesListLabel = "Notes in Rich Text" %}
+      {% if node.field_tab_label_rich_text_notes.value is not empty %}
+        {% set notesListLabel = node.field_tab_label_rich_text_notes.value %}
+      {% endif %}
+      <center><h3> {{ notesListLabel }} </h3></center>
+
+      {# Since this is all rich text, there is not an extra Notes section #}
+      {% for note in node.field_notes %}
+        <p>
+          {{ note.value | raw }}
+        </p>
+      {% endfor %}
+
+    </div>
+
+
+    {# TABLES OF DATA #}
+    <div id="datatables" class="tab-pane">
+
+      {# Output the heading according to the tab label #}
+      {% set tableValuesLabel = "Tables of Data" %}
+      {% if node.field_tab_label_data_tables.value is not empty %}
+        {% set tableValuesLabel = node.field_tab_label_data_tables.value %}
+      {% endif %}
+      <center><h3> {{ tableValuesLabel }}</h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_data_tables.value | raw }}
+      <hr>
+
+
+      {# Set the style for the table cells throughout the page #}
+      <style>
+        th {padding: 10px; text-align: center; background-color: #e9e9e9; }
+        td {padding: 10px;}
+      </style>
+
+      <br>
+
+      {# The tableItem is the array of table values in the tablefield widget #}
+      {# The last row and last column contain non-table values so use row & col counters to exclude the last row & col#}
+      {% for tableItem in node.field_data_tables.getValue() %}
+
+        {# dump(tableItem) #}
+
+        {% set rowCount = tableItem['value'] | length %}
+        {# rowCount #}
+
+        <table border="1">
+          {% set rowCounter = 1 %}
+
+          {% for rows in tableItem['value'] if rowCounter < rowCount %}
+
+            {% set colCount = rows | length %}
+
+            <tr>
+              {% for i in 0..colCount-1 %}
+                <td> {{ rows[i] }} </td>
+              {% endfor %}
+            </tr>
+
+            {% set rowCounter = rowCounter + 1 %}
+            {# rowCounter #}
+          {% endfor %}
+
+        </table>
+        <br>
+        {{ tableItem.caption }} <br>
+
+      {% endfor %}
+
+    </div>
+
+
+    {# LOCATION #}
+    <div id="location" class="tab-pane">
+
+      {# Output the heading according to the tab label #}
+      {% set locationLabel = "Location" %}
+      {% if node.field_tab_label_location.value is not empty %}
+        {% set locationLabel = node.field_tab_label_location.value %}
+      {% endif %}
+      <center><h3> {{ locationLabel }} </h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_location.value | raw }}
+      <hr>
+
+      {# Embed the map as a block using the Twig Tweak module functionality #}
+      {{ drupal_view('geolocation_demo_common_map', 'block_1') }}
+
+      <h3>Geolocation Coordinates </h3>
+
+      <b>Lat:</b> {{ node.field_geolocation_demo_single.lat }} <br>
+      <b>Long:</b> {{ node.field_geolocation_demo_single.lng }} <br>
+
+    </div>
+
+
+    {# FILE UPLOADS #}
+    <div id="uploads" class="tab-pane">
+
+      {# Output the heading according to the tab label #}
+      {% set fileUploadLabel = "Image & File Uploads" %}
+      {% if node.field_tab_label_file_uploads.value is not empty %}
+        {% set fileUploadLabel = node.field_tab_label_file_uploads.value %}
+      {% endif %}
+      <center><h3> {{ fileUploadLabel }} </h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_image_file_uploads.value | raw }}
+      <hr>
+
+      {# Image File Uploads #}
+      <p>
+        {% set image_exists = false %}
+
+        {% for image in node.field_protocol_images %}
+        <table style="width:98%;" class="table table-bordered table-condensed">
+          {% set title = image.title %}
+          {% set upload_image = image.entity.filename.value %}
+          {% set image_exists = true %}
+
+          {% autoescape %}
+          <tr>
+            <td>
+              <center>
+                <embed height="400" src="/sites/default/files/protocol-images/{{ upload_image }}" ></embed>
+              </center>
+            </td>
+          </tr>
+          <tr>
+            <td>
+      <p><b> {{ title }} </b></p>
+      <a href="/sites/default/files/protocol-images/{{ upload_image }}" target="_blank">Open image in separate
+        window</a>
+      </td>
+      </tr>
+      {% endautoescape %}
+      </table>
+      {% endfor %}
+
+      <hr>
+      <br>
+
+      </p>
+
+      {# PDF File Uploads #}
+      <p>
+
+        {% set pdf_exists = false %}
+
+        {% for pdf in node.field_protocol_files %}
+
+        {# dump(pdf) #}
+        {% set display_embedded = pdf.display %}
+        {% set description = pdf.description %}
+        {% set upload_filename = pdf.entity.filename.value %}
+        {% set pdf_exists = true %}
+
+        {% autoescape %}
+        <table style="width:98%;" class="table table-bordered table-condensed">
+          <tr>
+            <td>
+      <p>
+      <center><b> {{ description }} </b></center>
+      </p>
+      <a href="/sites/default/files/protocol-files/{{ upload_filename }}" target="_blank">Open file in separate
+        window</a>
+      </td>
+      </tr>
+
+      <tr>
+        <td>
+          <center>
+            {% if display_embedded == true %}
+              <embed height="400" src="/sites/default/files/protocol-files/{{ upload_filename }}#page=1&zoom=130"
+                     width="1120"></embed>
+            {% endif %}
+          </center>
+        </td>
+      </tr>
+      </table>
+
+      {% endautoescape %}
+      {% endfor %}
+      </p>
+
+    </div>
+
+
+    {# LIST OF WEBSITES / URLS #}
+    <div id="urls" class="tab-pane">
+
+      {# Output the heading according to the tab label #}
+      {% set urlUploadLabel = "Web Sites" %}
+      {% if node.field_tab_label_urls.value is not empty %}
+        {% set urlUploadLabel = node.field_tab_label_urls.value %}
+      {% endif %}
+      <center><h3> {{ urlUploadLabel }} </h3></center>
+      <hr>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_web_sites.value | raw }}
+      <hr>
+
+      {# Output the list of URLs / Web sites #}
+      {% for url in node.field_urls %}
+        <p>
+          <a href="{{ url.uri }}" target="_blank">{{ url.title }}</a>
+        </p>
+      {% endfor %}
+    </div>
+
+
+    {# DECIMAL VALUES #}
+    <div id="decimals" class="tab-pane">
+
+      {# Set the text for the DECIMAL VALUES tab as appropriate #}
+      {% set decimalValuesLabel = "Decimal Values" %}
+      {% if node.field_tab_label_decimal_values.value is not empty %}
+        {% set decimalValuesLabel = node.field_tab_label_decimal_values.value %}
+      {% endif %}
+      <center><h3> {{ decimalValuesLabel }}</h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_decimal_values.value | raw }}
+      <hr>
+
+      {# Output the decimal values in an HTML table #}
+      <table border="1">
+        <tr>
+          <th>Label</th>
+          <th>Value</th>
+        </tr>
+        {% for decimalval in node.field_decimal_values %}
+          <tr>
+            <td> {{ decimalval.value.first }} </td>
+            <td> {{ decimalval.value.second }} </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+
+
+    {# INTEGER VALUES #}
+    <div id="integers" class="tab-pane">
+
+      {# Set the text for the INTEGER VALUES tab as appropriate #}
+      {% set integerValuesLabel = "Integer Values" %}
+      {% if node.field_tab_label_integer_values.value is not empty %}
+        {% set integerValuesLabel = node.field_tab_label_integer_values.value %}
+      {% endif %}
+      <center><h3> {{ integerValuesLabel }}</h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_integer_values.value | raw }}
+      <hr>
+
+      {# Output the integer values in an HTML table #}
+      <table border="1">
+        <tr>
+          <th>Label</th>
+          <th>Value</th>
+        </tr>
+        {% for intval in node.field_integer_values %}
+          <tr>
+            <td> {{ intval.value.first }} </td>
+            <td> {{ intval.value.second }} </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+
+
+    {# FLOAT VALUES #}
+    <div id="floats" class="tab-pane">
+
+      {# Set the text for the FLOAT VALUES tab as appropriate #}
+      {% set floatValuesLabel = "Float Values" %}
+      {% if node.field_tab_label_float_values.value is not empty %}
+        {% set floatValuesLabel = node.field_tab_label_float_values.value %}
+      {% endif %}
+      <center><h3> {{ floatValuesLabel }}</h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_float_values.value | raw }}
+      <hr>
+
+      {# Output the float values in an HTML table #}
+      <table border="1">
+        <tr>
+          <th>Label</th>
+          <th>Value</th>
+        </tr>
+        {% for floatval in node.field_float_values %}
+          <tr>
+            <td> {{ floatval.value.first }} </td>
+            <td> {{ floatval.value.second }} </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+
+
+    {# TEXT VALUES #}
+    <div id="textvals" class="tab-pane">
+
+      {# Set the text for the TEXT VALUES tab as appropriate #}
+      {% set textValuesLabel = "Text Values" %}
+      {% if node.field_tab_label_text_values.value is not empty %}
+        {% set textValuesLabel = node.field_tab_label_text_values.value %}
+      {% endif %}
+      <center><h3> {{ textValuesLabel }}</h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_text_values.value | raw }}
+      <hr>
+
+      {# Output the text values in an HTML table #}
+      <table border="1">
+        <tr>
+          <th>Label</th>
+          <th>Value</th>
+        </tr>
+        {% for textval in node.field_text_values %}
+          <tr>
+            <td> {{ textval.value.first }} </td>
+            <td> {{ textval.value.second }} </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+
+
+    {# DATE VALUES #}
+    <div id="datevals" class="tab-pane">
+
+      {# Set the text for the DATE VALUES tab as appropriate #}
+      {% set dateValuesLabel = "Date Values" %}
+      {% if node.field_tab_label_date_values.value is not empty %}
+        {% set dateValuesLabel = node.field_tab_label_date_values.value %}
+      {% endif %}
+      <center><h3> {{ dateValuesLabel }}</h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_the_date_values.value | raw }}
+      <hr>
+
+      {# Output the date values in an HTML table #}
+      <table border="1">
+        <tr>
+          <th>Label</th>
+          <th>Value</th>
+        </tr>
+        {% for dateval in node.field_date_values %}
+          <tr>
+            <td> {{ dateval.value.first }} </td>
+            <td> {{ dateval.value.second }} </td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+
+    {# VIDEOS #}
+
+    <div id="videos" class="tab-pane">
+
+      {# Set the text for the VIDEO VALUES tab as appropriate #}
+      {% set videoValuesLabel = "Media and YouTube Videos" %}
+      {% if node.field_tab_label_videos.value is not empty %}
+        {% set videoValuesLabel = node.field_tab_label_videos.value %}
+      {% endif %}
+      <center><h3> {{ videoValuesLabel }}</h3></center>
+
+      {# Output the rich text notes #}
+      {{ node.field_notes_videos.value | raw }}
+      <hr>
+
+      <div>
+
+        {# Output all of the videos from the Media library #}
+        {% for video in node.field_media_videos %}
+
+          <p>
+
+          {% set vfile = video.entity %}
+          {% set uri = vfile.field_media_video_file.entity.uri.value %}
+
+          {% autoescape %}
+            <video width="640" height="480" controls>
+              {% set good_uri = uri|replace({'public://': '/sites/default/files/'}) %}
+              <source src="{{ good_uri }}" type="video/mp4">
+            </video>
+          {% endautoescape %}
+
+          <h4> {{ video.entity.name.value }} </h4>
+          </p>
+
+        {% endfor %}
+
+      </div>
+
+      <hr>
+
+      {# Output all of the YouTube videos #}
+      <div>
+
+        {% for evideo in node.field_embedded_videos %}
+
+          <div class="field__items">
+            <div class="field__item">
+
+              <div class="video-embed-field-provider-youtube video-embed-field-responsive-video">
+
+                <p>
+
+                {% set vidsrc = evideo.value | replace({'https://youtu.be/': 'https://www.youtube.com/embed/'}) %}
+
+                <iframe width="854" height="480" src="{{ vidsrc }}"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+
+                <h4> {{ vidsrc }} </h4>
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <br>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+

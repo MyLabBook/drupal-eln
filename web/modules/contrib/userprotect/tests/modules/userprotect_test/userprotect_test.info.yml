@@ -1,0 +1,13 @@
+name: User protect test
+type: module
+description: 'Support module for the User protect tests.'
+package: Testing
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - userprotect
+
+# Information added by Drupal.org packaging script on 2020-01-06
+version: '8.x-1.1'
+project: 'userprotect'
+datestamp: 1578341587

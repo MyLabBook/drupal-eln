@@ -1,0 +1,22 @@
+<dl class="double-field-definition-list">
+{%- for item in items -%}
+  <dt>
+    {% if settings.first.prefix %}
+      <span class="double-field-prefix">{{ settings.first.prefix }}</span>
+    {% endif %}
+    {{ item.first }}
+    {% if settings.first.suffix %}
+      <span class="double-field-suffix">{{ settings.first.suffix }}</span>
+    {% endif %}
+  </dt>
+  <dd>
+    {% if settings.second.prefix %}
+      <span class="double-field-prefix">{{ settings.second.prefix }}</span>
+    {% endif %}
+    {{ item.second }}
+    {% if settings.second.suffix %}
+      <span class="double-field-suffix">{{ settings.second.suffix }}</span>
+    {% endif %}
+  </dd>
+{%- endfor -%}
+</dl>

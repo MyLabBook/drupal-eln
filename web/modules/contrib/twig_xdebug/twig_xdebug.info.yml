@@ -1,0 +1,11 @@
+name: Twig Xdebug
+type: module
+# core: 8.x
+description: 'Enables Xdebug breakpoints in Twig.'
+package: Development
+
+# Information added by Drupal.org packaging script on 2019-04-24
+version: '8.x-1.1'
+core: '8.x'
+project: 'twig_xdebug'
+datestamp: 1556130184

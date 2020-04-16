@@ -1,0 +1,50 @@
+# Schema for configuration files of the User protect module.
+
+userprotect.rule.*:
+  type: config_entity
+  label: 'Protection rule'
+  mapping:
+    name:
+      type: string
+      label: 'Machine name'
+    label:
+      type: label
+      label: 'Name'
+    protectedEntityTypeId:
+      type: string
+      label: 'Protected entity type'
+    protectedEntityId:
+      type: string
+      label: 'Protected entity ID'
+    protections:
+      type: sequence
+      label: 'Protection'
+      sequence:
+        type: user_protection
+    langcode:
+      type: string
+      label: 'Default language'
+    status:
+      type: boolean
+      label: 'Enabled'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
+
+# User protection plugin.
+user_protection:
+  type: mapping
+  label: 'User protection'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    provider:
+      type: string
+      label: 'Provider'
+    status:
+      type: boolean
+      label: 'Status'
+    weight:
+      type: integer
+      label: 'Weight'

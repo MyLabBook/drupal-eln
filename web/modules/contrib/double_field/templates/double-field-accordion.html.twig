@@ -1,0 +1,24 @@
+<div class="double-field-accordion">
+{% for item in items %}
+  <h3>
+    <a href="#">
+      {% if settings.first.prefix %}
+        <span class="double-field-prefix">{{ settings.first.prefix }}</span>
+      {% endif %}
+      {{ item.first }}
+      {% if settings.first.suffix %}
+        <span class="double-field-suffix">{{ settings.first.suffix }}</span>
+      {% endif %}
+    </a>
+  </h3>
+  <div>
+    {% if settings.second.prefix %}
+      <span class="double-field-prefix">{{ settings.second.prefix }}</span>
+    {% endif %}
+    {{ item.second }}
+    {% if settings.second.suffix %}
+      <span class="double-field-suffix">{{ settings.second.suffix }}</span>
+    {% endif %}
+  </div>
+{% endfor %}
+</div>

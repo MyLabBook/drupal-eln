@@ -1,0 +1,5 @@
+
+# Make a backup of the MySQL database MySQL dump file using drush (do this from directory of /var/www/html/mylabbook/web )
+drush sql:dump --result-file=../dbsql/elndb.sql
+
+

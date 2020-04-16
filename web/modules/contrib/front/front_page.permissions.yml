@@ -1,0 +1,4 @@
+administer front page:
+  title: 'Administer front page'
+  description: 'Allow users to make changes to the front page settings.'
+  restrict access: true

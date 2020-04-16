@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="Drupal Field">
+  <description>>PHP CodeSniffer configuration for Double Field module</description>
+  <arg name="extensions" value="php, yml, text, module"/>
+  <arg name="colors"/>
+  <rule ref="Drupal">
+    <exclude name="Drupal.Commenting.Deprecated.IncorrectTextLayout"/>
+    <exclude name="Drupal.Semantics.FunctionTriggerError.TriggerErrorTextLayoutRelaxed"/>
+    <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
+  </rule>
+  <rule ref="DrupalPractice">
+    <exclude name="DrupalPractice.Commenting.CommentEmptyLine.SpacingAfter"/>
+  </rule>
+</ruleset>

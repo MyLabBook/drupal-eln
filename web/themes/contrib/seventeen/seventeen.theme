@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Seventeen theme.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK() for html.html.twig.
+ */
+function seventeen_preprocess_html(array &$vars): void {
+  $container_width = theme_get_setting('container_width');
+  if ($container_width) {
+    $vars['attributes']['class'][] = 'container-fixed-width';
+    $vars['attributes']['class'][] = 'container-width-' . $container_width;
+  }
+
+  $style = '';
+  $font_size = theme_get_setting('font_size');
+  if ($font_size) {
+    $style .= 'font-size: ' . $font_size . 'px;';
+  }
+
+  $font_family = theme_get_setting('font_family');
+  if ($font_family) {
+
+    $font_families = [
+      // Standard.
+      'impact' => 'Impact, Charcoal, sans-serif',
+      'palatino_linotype' => '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+      'tahoma' => 'Tahoma, Geneva, sans-serif',
+      'century-gothic' => 'Century Gothic, sans-serif',
+      'lucida-sans-unicode' => 'Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif',
+      'arial-black' => 'Arial Black’, Gadget, sans-serif',
+      'times-new-roman' => 'Times New Roman’, Times, serif',
+      'arial-warrow' => 'Arial Narrow’, sans-serif',
+      'verdana' => 'Verdana, Geneva, sans-serif',
+      'copperplate-gothic_light' => '"Copperplate / Copperplate", Gothic Light, sans-serif',
+      'lucida-console' => '"Lucida Console", Monaco, monospace',
+      'gill-sans' => '"Gill Sans / Gill", Sans MT, sans-serif',
+      'trebuchet-ms' => '"Trebuchet MS", Helvetica, sans-serif',
+      'courier-new' => '"Courier New", Courier, monospace',
+      'arial' => 'Arial, Helvetica, sans-serif',
+      'georgia' => 'Georgia, "Times New Roman", serif',
+      // Google fonts.
+      'ubuntu' => 'Ubuntu, sans-serif',
+      'open-sans' => '"Open Sans", sans-serif',
+      'josefin-slab' => 'Josefin Slab, serif',
+      'pt-sans' => '"PT Sans", sans-serif',
+      'roboto' => 'Roboto, sans-serif',
+      'source-sans-pro' => '"Source Sans Pro", sans-serif',
+      'exo' => 'Exo, sans-serif',
+    ];
+
+    $style .= 'font-family: ' . $font_families[$font_family];
+  }
+
+  if ($style) {
+    $vars['attributes']['style'] = $style;
+  }
+}
+
+/**
+ * Implements hook_attachments_alter().
+ */
+function seventeen_page_attachments_alter(array &$page): void {
+
+  // Load google font if needed.
+  $google_fonts = [
+    'ubuntu' => 'Ubuntu',
+    'open-sans' => 'Open+Sans',
+    'josefin-slab' => 'Josefin+Slab',
+    'pt-sans' => 'PT+Sans',
+    'roboto' => 'Roboto',
+    'source-sans-pro' => 'Source+Sans+Pro',
+    'exo' => 'Exo',
+  ];
+
+  $font = theme_get_setting('font_family');
+  if (isset($google_fonts[$font])) {
+    $font_link = [
+      '#type' => 'html_tag',
+      '#tag' => 'link',
+      '#attributes' => [
+        'href' => 'https://fonts.googleapis.com/css?family=' . $google_fonts[$font],
+        'rel' => 'stylesheet',
+        'type' => 'text/css',
+      ],
+    ];
+    $page['#attached']['html_head'][] = [$font_link, 'font_link'];
+  }
+
+  $page['#attached']['drupalSettings']['seventeen']['stickyFormActions'] = theme_get_setting('sticky_form_actions');
+}
+
+/**
+ * Implements hook_preprocess_input__submit().
+ */
+function seventeen_preprocess_input__submit(array &$variables): void {
+  if (!isset($variables['element']['#dropbutton'])) {
+    $classes = &$variables['attributes']['class'];
+    if (!in_array('button--primary', $classes) && !in_array('button--danger', $classes)) {
+      $classes[] = 'button--17';
+    }
+  }
+}

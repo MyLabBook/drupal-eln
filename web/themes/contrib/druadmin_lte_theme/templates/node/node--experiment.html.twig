@@ -1,0 +1,325 @@
+{#
+/**
+ * @file
+ *
+ *
+ * Available variables:
+ *
+ * @see
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'clearfix',
+] %}
+
+
+<div class="row"
+     style="border: 3px solid #0a7bc1;  background-color: #f4f4f4; padding-left: 10px; padding-right: 10px;
+            margin-left: 15px; margin-right: 15px; padding-bottom: 20px;">
+
+  <h3>The Protocol Steps </h3>
+
+  <div class="row">
+
+    {% set step_num = 1 %}
+    {% for step in node.field_protocol_steps %}
+
+      <div class="col-md-4">
+        <div class="card h-100" style="border: 2px solid #028ee1; background-color: #fff; margin: 15px; ">
+
+          <div class="card-body" style="text-align: center; margin-top: 20px; margin-bottom: 20px; margin-left: 15px; margin-right: 15px;">
+            <h4 class="card-title">
+              {% set step_name = step.entity.title.value %}
+              <a href="/node/{{ step.entity.nid.value }}">
+                <b> {{ step_num }}. {{ step_name }} </b>
+              </a>
+            </h4>
+            <div style="text-align: center">
+              {% if (step.entity.field_completion_status.value == 0) %}
+                Status: <b> Incomplete </b>
+              {% elseif (step.entity.field_completion_status.value == 1) %}
+                Status: <b> Complete </b>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% set step_num = step_num + 1 %}
+
+    {% endfor %}
+
+  </div>
+</div>
+
+
+<p>
+  &nbsp;
+</p>
+
+
+<h2>Experimental Setup: &nbsp; &nbsp; &nbsp; <b> {{ node.title.value }} </b></h2>
+
+{% if (node.field_completion_status.value == 0) %}
+  <h4><em>Overall Experiment Status: <b> Incomplete </b> </em></h4>
+{% elseif (node.field_completion_status.value == 1) %}
+  <h4><em>Overall Experiment Status: <b> Complete </b> </em></h4>
+{% endif %}
+
+<hr>
+
+<div class="tabs">
+
+  <ul class="nav nav-tabs">
+
+    <li class="nav-item">
+      <a href="#overview" data-toggle="tab"> &nbsp; &nbsp; &nbsp; Overview &nbsp; <i
+          class="fa fa-lightbulb-o"></i></a>
+    </li>
+    <li class="nav-item">
+      <a href="#preliminaries" data-toggle="tab"> &nbsp; &nbsp; &nbsp; Preliminaries &nbsp; <i
+          class="fa fa-check-square-o"></i></a>
+    </li>
+    <li class="nav-item">
+      <a href="#scientific" data-toggle="tab"> &nbsp; &nbsp; &nbsp; Scientific Method &nbsp; <i
+          class="fa fa-flask"></i></a>
+    </li>
+    <li class="nav-item">
+      <a href="#documents" data-toggle="tab"> &nbsp; &nbsp; &nbsp; Documents & Websites &nbsp; <i
+          class="fa fa-file-o"></i></a>
+    </li>
+    <li class="nav-item">
+      <a href="#metadata" data-toggle="tab"> &nbsp; &nbsp; &nbsp; Metadata &nbsp; <i class="fa fa-list"></i></a>
+    </li>
+
+  </ul>
+
+  {# ABSTRACT #}
+  <div class="tab-content">
+
+    <div id="overview" class="tab-pane active">
+      <div{{ content_attributes.addClass('node--content') }}>
+
+        <pre><h4>Researchers</h4></pre>
+        <p>
+        {% set first = true %}
+        {% for researcher in node.field_researchers %}
+          {% if first == false %}
+            {{ " , " }}
+          {% else %}
+            {% set first = false %}
+          {% endif %}
+          {{ researcher.value }}
+        {% endfor %}
+        </p>
+        <br>
+
+        <pre><h4>Organizations</h4></pre>
+        <p>
+        {% set first = true %}
+        {% for org in node.field_institution %}
+          {% if first == false %}
+            {{ " , " }}
+          {% else %}
+            {% set first = false %}
+          {% endif %}
+          {{ org.value }}
+        {% endfor %}
+        </p>
+        <br>
+
+        <pre><h4>Abstract</h4></pre>
+        <p>
+          {{ node.body.value | raw }}
+        </p>
+        <br>
+
+        <pre><h4>Images</h4></pre>
+        <p>
+          {% set image_exists = false %}
+
+          {% for image in node.field_experiment_image %}
+          <table style="width:98%;" class="table table-bordered table-condensed">
+            {% set title = image.title %}
+            {% set upload_image = image.entity.filename.value %}
+            {% set image_exists = true %}
+
+            {% autoescape %}
+            <tr>
+              <td>
+                <center>
+                  <embed height="400" src="/sites/default/files/experiment-images/{{ upload_image }}" ></embed>
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td>
+        <p><b> {{ title }} </b></p>
+        <a href="/sites/default/files/experiment-images/{{ upload_image }}" target="_blank">Open image in separate
+          window</a>
+        </td>
+        </tr>
+        {% endautoescape %}
+        </table>
+        {% endfor %}
+        </p>
+        <br>
+
+      </div>
+    </div>
+
+    {# PRELIMINARIES #}
+    <div id="preliminaries" class="tab-pane">
+      <div{{ content_attributes.addClass('node--content') }}>
+
+        <pre><h4>Preparation</h4></pre>
+        <p>
+          {{ node.field_preparation.value | raw }}
+        </p>
+        <br>
+
+        <pre><h4>Guidelines</h4></pre>
+        <p>
+          {{ node.field_guidelines.value | raw }}
+        </p>
+        <br>
+
+        <pre><h4>Safety Warnings</h4></pre>
+        <p>
+          {{ node.field_safety_warnings.value | raw }}
+        </p>
+        <br>
+
+      </div>
+    </div>
+
+    {# SCIENTIFIC METHOD #}
+    <div id="scientific" class="tab-pane">
+      <div{{ content_attributes.addClass('node--content') }}>
+
+        <pre><h4>Hypothesis</h4></pre>
+        <p>
+          {{ node.field_hypothesis.value | raw }}
+        </p>
+        <br>
+
+        <pre><h4>Conclusion</h4></pre>
+        <p>
+          {{ node.field_conclusion.value | raw }}
+        </p>
+        <br>
+
+      </div>
+    </div>
+
+    {# DOCUMENTS AND WEBSITES #}
+    <div id="documents" class="tab-pane">
+      <div{{ content_attributes.addClass('node--content') }}>
+
+        <pre><h4>Documents</h4></pre>
+
+        <p>
+        <ul>
+          {% for doc in node.field_relevant_documents %}
+
+            {# set doc_label = doc.entity.label #}
+            {% set doc_description = doc.description %}
+            {% set doc_url = file_url(doc.entity.uri.value) %}
+
+            <li>
+              <a href="{{ doc_url }}" target="_blank">{{ doc_description }}</a>
+              <br>
+            </li>
+
+          {% endfor %}
+        </ul>
+        </p>
+        <br>
+
+        <pre><h4>Websites</h4></pre>
+        <p>
+        <ul>
+          {% for website in node.field_relevant_websites %}
+
+            {# dump(website) #}
+
+            {% if website.title | trim | length > 0 %}
+              {% set webTitle = website.title | trim %}
+            {% else %}
+              {% set webTitle = website.uri %}
+            {% endif %}
+            <li>
+              <a href="{{ website.uri }}" target="_blank">{{ webTitle }}</a>
+              <br>
+            </li>
+
+          {% endfor %}
+        </ul>
+        </p>
+        <br>
+
+      </div>
+    </div>
+
+    {# METADATA #}
+    <div id="metadata" class="tab-pane">
+      <div{{ content_attributes.addClass('node--content') }}>
+
+        <p> &nbsp; </p>
+
+
+        <pre><h4>Keywords</h4></pre>
+        <p>
+
+          {% set first = true %}
+          {% for keyword in node.field_keywords %}
+
+            {% if first == false %}
+              {{ " , " }}
+            {% else %}
+              {% set first = false %}
+            {% endif %}
+
+            {{ keyword.value }}
+
+          {% endfor %}
+        </p>
+        <br>
+
+        <pre><h4>License</h4></pre>
+        <p>
+          {{ node.field_license.value | raw }}
+        </p>
+        <br>
+
+
+        <pre><h4>DOI</h4></pre>
+        <p>
+          <a href="{{ node.field_doi.0.url }}" target="_blank">{{ node.field_doi.0.title }}</a>
+        </p>
+        <br>
+
+
+        <pre><h4>Citation</h4></pre>
+        <p>
+          {{ node.field_citation.value | raw }}
+        </p>
+        <br>
+
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+{# content #}

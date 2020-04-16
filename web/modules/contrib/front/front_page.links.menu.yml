@@ -1,0 +1,17 @@
+front_page.admin_index:
+    title: 'Front Page'
+    description: 'Configure front page.'
+    parent: system.admin_config
+    route_name: front_page.admin_index
+
+front_page.settings:
+    title: 'Settings'
+    description: 'Administer custom front page settings.'
+    parent: front_page.admin_index
+    route_name: front_page.settings
+
+front_page.home_links:
+    title: 'Home links'
+    description: 'Allows you to change the location of the &lt;front&gt; placeholder.'
+    parent: front_page.admin_index
+    route_name: front_page.home_links

@@ -1,0 +1,22 @@
+front_page.admin_index:
+  path: '/admin/config/front'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'administer front page'
+
+front_page.settings:
+  path: '/admin/config/front/settings'
+  defaults:
+    _form: 'Drupal\front_page\Form\FrontPageSettingsForm'
+    _title: 'Settings'
+  requirements:
+    _permission: 'administer front page'
+
+front_page.home_links:
+  path: '/admin/config/front/home-links'
+  defaults:
+    _form: 'Drupal\front_page\Form\FrontPageHomeLinksForm'
+    _title: 'Home links'
+  requirements:
+    _permission: 'administer front page'

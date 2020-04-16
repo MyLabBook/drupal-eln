@@ -1,0 +1,15 @@
+{
+  "name": "drupal/userprotect",
+  "type": "drupal-module",
+  "description": "Allows admins to protect users from being edited or cancelled, on a per-user basis.",
+  "keywords": ["Drupal", "User Management"],
+  "homepage": "https://www.drupal.org/project/userprotect",
+  "license": "GPL-2.0+",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/userprotect",
+    "source": "http://cgit.drupalcode.org/userprotect"
+  },
+  "require-dev": {
+    "drupal/role_delegation": "^1.0"
+  }
+}

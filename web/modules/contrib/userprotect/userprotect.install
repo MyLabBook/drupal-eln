@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the userprotect module.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_install().
+ *
+ * Installs default userprotect permissions for authenticated users.
+ */
+function userprotect_install() {
+  $role = \Drupal::entityTypeManager()->getStorage('user_role')->load(AccountInterface::AUTHENTICATED_ROLE);
+  $role->grantPermission('userprotect.mail.edit');
+  $role->grantPermission('userprotect.pass.edit');
+  $role->grantPermission('userprotect.account.edit');
+  $role->save();
+}

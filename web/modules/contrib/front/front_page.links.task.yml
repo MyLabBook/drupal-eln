@@ -1,0 +1,11 @@
+front_page.settings:
+    title: 'Settings'
+    route_name: front_page.settings
+    base_route: system.admin_config
+    weight: 10
+
+front_page.home_links:
+    title: 'Home links'
+    route_name: front_page.home_links
+    base_route: system.admin_config
+    weight: 10

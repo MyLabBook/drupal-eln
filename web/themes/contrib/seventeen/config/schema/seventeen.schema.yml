@@ -1,0 +1,16 @@
+seventeen.settings:
+  type: theme_settings
+  label: Seventeen settings
+  mapping:
+    sticky_form_actions:
+      type: string
+      label: Sticky form actions
+    container_width:
+      type: integer
+      label: Container width
+    font_size:
+      type: integer
+      label: Font size
+    font_family:
+      type: string
+      label: Font family

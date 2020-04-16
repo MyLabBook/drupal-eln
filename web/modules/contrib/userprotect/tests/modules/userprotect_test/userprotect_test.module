@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Support module for the User protect tests.
+ */
+
+/**
+ * Implements hook_user_format_name_alter().
+ *
+ * Alters the display name of an user to test when the user's display name must
+ * be used and when the raw account name.
+ */
+function userprotect_test_user_format_name_alter(&$name, $account) {
+  $name .= '-userprotect';
+}

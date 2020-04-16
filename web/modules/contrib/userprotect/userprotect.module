@@ -1,0 +1,270 @@
+<?php
+
+/**
+ * @file
+ * Allows admins to protect users from being edited or cancelled.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\user\UserInterface;
+use Drupal\userprotect\UserProtect;
+
+/**
+ * Loads a ProtectionRule object.
+ *
+ * @param string $name
+ *   The ID of the ProtectionRule object to load.
+ *
+ * @return Drupal\userprotect\Entity\ProtectionRuleInterface
+ *   An instance of an userprotect_rule entity.
+ */
+function userprotect_rule_load($name) {
+  return \Drupal::entityTypeManager()->getStorage('userprotect_rule')->load($name);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for entity type "user".
+ */
+function userprotect_user_access(UserInterface $entity, $op, AccountInterface $account) {
+  // Check if the account has the permission "userprotect.bypass_all".
+  // If so, all protections rules should be ignored.
+  if (!$account->hasPermission('userprotect.bypass_all')) {
+    // Users editing their own accounts have the permissions for e-mail
+    // and password determined by the role-based setting in the userprotect
+    // section at admin/config/people/permissions. This is done for consistency
+    // with the way core handles the self-editing of usernames.
+    if ($entity->id() == $account->id()) {
+      switch ($op) {
+        case 'user_name':
+          if (!$account->hasPermission('change own username')) {
+            return AccessResult::forbidden();
+          }
+          break;
+
+        case 'user_mail':
+          if (!$account->hasPermission('userprotect.mail.edit')) {
+            return AccessResult::forbidden();
+          }
+          break;
+
+        case 'user_pass':
+          if (!$account->hasPermission('userprotect.pass.edit')) {
+            return AccessResult::forbidden();
+          }
+          break;
+
+        case 'user_edit':
+        case 'update':
+          if (!$account->hasPermission('userprotect.account.edit')) {
+            return AccessResult::forbidden();
+          }
+          break;
+
+        case 'user_delete':
+          if (!$account->hasPermission('cancel account')) {
+            return AccessResult::forbidden();
+          }
+          break;
+      }
+    }
+    else {
+      $protection_rules = userprotect_get_user_protection_rules($entity);
+
+      foreach ($protection_rules as $rule) {
+        // Check if the given account may bypass this rule.
+        if ($account->hasPermission($rule->getPermissionName())) {
+          // The given account has the permission to bypass this rule.
+          continue;
+        }
+
+        if ($rule->isProtected($entity, $op, $account)) {
+          return AccessResult::forbidden();
+        }
+      }
+    }
+  }
+
+  // Fallback to other operation checks for operations defined by this module.
+  switch ($op) {
+    case 'user_name':
+    case 'user_mail':
+    case 'user_pass':
+    case 'user_status':
+    case 'user_roles':
+    case 'user_edit':
+      return ($entity->access('update', $account)) ? AccessResult::allowed() : AccessResult::forbidden();
+
+    case 'user_delete':
+      return ($entity->access('delete', $account)) ? AccessResult::allowed() : AccessResult::forbidden();
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_entity_field_access().
+ *
+ * If the field in question is a field on the user entity, protection rules are
+ * checked to verify if access to edit the field is allowed.
+ *
+ * @see userprotect_user_access()
+ */
+function userprotect_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemList $items = NULL) {
+  if (is_null($items)) {
+    // Sometimes no field item list is passed. In this case, there is nothing
+    // for userprotect to check.
+    return AccessResult::neutral();
+  }
+
+  if ($operation != 'edit') {
+    // Field access checks are limited to the edit operation.
+    return AccessResult::neutral();
+  }
+
+  if ($field_definition->getTargetEntityTypeId() != 'user') {
+    // Access checks are only performed on user entities.
+    return AccessResult::neutral();
+  }
+
+  // Get entity for which field access is checked.
+  $entity = $items->getEntity();
+  if ($entity->isNew()) {
+    // Access checks are only performed on existing users.
+    return AccessResult::neutral();
+  }
+
+  // Check access based on the field's name.
+  $name = $field_definition->getName();
+  switch ($name) {
+    case 'name':
+    case 'mail':
+    case 'pass':
+    case 'status':
+    case 'roles':
+      // User protect defines each protection as an operation on the entity. See
+      // userprotect_user_access().
+      $entity_operation = 'user_' . $name;
+      return ($entity->access($entity_operation, $account)) ? AccessResult::neutral() : AccessResult::forbidden();
+
+    // Make sure this module also works when role_delegation is enabled.
+    case 'role_change':
+      $entity_operation = 'user_roles';
+      return ($entity->access($entity_operation, $account)) ? AccessResult::neutral() : AccessResult::forbidden();
+  }
+
+  // The field is not one of the fields that userprotect supports.
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_user_delete().
+ *
+ * When an user is deleted, delete all associated protection rules as well.
+ */
+function userprotect_user_delete($account) {
+  // Lookup all protection rules for this user.
+  $entity_ids = \Drupal::entityQuery('userprotect_rule')
+    ->condition('protectedEntityTypeId', 'user')
+    ->condition('protectedEntityId', $account->id())
+    ->execute();
+  // Delete protection rules.
+  if (!empty($entity_ids)) {
+    $storage_handler = \Drupal::entityTypeManager()->getStorage('userprotect_rule');
+    $entities = $storage_handler->loadMultiple($entity_ids);
+    $storage_handler->delete($entities);
+  }
+}
+
+/**
+ * Implements hook_user_role_delete().
+ *
+ * When an role is deleted, delete all associated protection rules as well.
+ */
+function userprotect_user_role_delete($role) {
+  // Lookup all protection rules for this user.
+  $entity_ids = \Drupal::entityQuery('userprotect_rule')
+    ->condition('protectedEntityTypeId', 'user_role')
+    ->condition('protectedEntityId', $role->id())
+    ->execute();
+  // Delete protection rules.
+  if (!empty($entity_ids)) {
+    $storage_handler = \Drupal::entityTypeManager()->getStorage('userprotect_rule');
+    $entities = $storage_handler->loadMultiple($entity_ids);
+    $storage_handler->delete($entities);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form "user_form".
+ */
+function userprotect_form_user_form_alter(&$form, &$form_state) {
+  // Get account that is being edited.
+  $build_info = $form_state->getBuildInfo();
+  $entity = $build_info['callback_object']->getEntity();
+
+  if ($entity->isNew()) {
+    // Don't protect fields when adding a new user.
+    return;
+  }
+
+  // Get operating account.
+  $account = \Drupal::currentUser();
+
+  // Get available protection plugins.
+  $manager = UserProtect::pluginManager();
+  $protection_definitions = $manager->getDefinitions();
+
+  // For each protection plugin, check if the current user has access
+  // to the element the plugin protects. If not, apply the protection.
+  $applied = [];
+  foreach ($protection_definitions as $protection_definition) {
+    if (!$entity->access($protection_definition['id'], $account)) {
+      // Apply protection.
+      $protection = $manager->createInstance($protection_definition['id'], $protection_definition);
+      $success = $protection->applyAccountFormProtection($form, $form_state);
+      if ($success) {
+        $applied[$protection->getPluginId()] = $protection->label();
+      }
+    }
+  }
+
+  // Display a message about the applied protections if there were protections
+  // applied and if the current user is an admin user.
+  if (count($applied) && $account->hasPermission('administer users')) {
+    $message = t('%user has been protected from the following editing operations: @operations', [
+      '%user' => $entity->getAccountName(),
+      '@operations' => implode(', ', $applied),
+    ]);
+    \Drupal::messenger()->addMessage($message);
+  }
+}
+
+/**
+ * Returns the protection rules that apply for the given account.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The account to get protection rules for.
+ *
+ * @return array
+ *   A list of \Drupal\userprotect\Entity\ProtectionRuleInterface
+ *   instances.
+ */
+function userprotect_get_user_protection_rules(UserInterface $account) {
+  $query = \Drupal::entityQuery('userprotect_rule');
+  $group_user = $query->andConditionGroup()
+    ->condition('protectedEntityTypeId', 'user')
+    ->condition('protectedEntityId', $account->id());
+  $group_user_role = $query->andConditionGroup()
+    ->condition('protectedEntityTypeId', 'user_role')
+    ->condition('protectedEntityId', $account->getRoles());
+  $group = $query->orConditionGroup()
+    ->condition($group_user)
+    ->condition($group_user_role);
+  $entity_ids = $query
+    ->condition($group)
+    ->execute();
+  return \Drupal::entityTypeManager()->getStorage('userprotect_rule')->loadMultiple($entity_ids);
+}

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains existing_values_autocomplete_widget.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function existing_values_autocomplete_widget_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the existing_values_autocomplete_widget module.
+    case 'help.page.existing_values_autocomplete_widget':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a widget for text fields that supplies an autocomplete callback with any previously entered (existing) values for the field.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

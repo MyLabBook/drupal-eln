@@ -1,0 +1,14 @@
+dashboards.edit:
+  route_name: entity.dashboard.edit_form
+  title: 'Edit'
+  base_route: entity.dashboard.canonical
+
+dashboards.layout:
+  route_name: layout_builder.dashboards.view
+  title: 'Layout'
+  base_route: entity.dashboard.canonical
+
+dashboard.view:
+  route_name: entity.dashboard.canonical
+  title: 'View'
+  base_route: entity.dashboard.canonical

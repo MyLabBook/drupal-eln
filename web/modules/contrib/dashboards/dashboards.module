@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * Contains dashboards.module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\dashboards\Plugin\SectionStorage\DashboardSectionStorage;
+use Drupal\dashboards\Plugin\SectionStorage\UserDashboardSectionStorage;
+
+/**
+ * Implements hook_help().
+ */
+function dashboards_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+
+    case 'help.page.dashboards':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Place dashboards with layout builder functionality.') . '</p>';
+      $output .= '<p>';
+      $output .= t('Visit the <a href=":project_link">Dashboards project page</a> on Drupal.org for more information.', [
+        ':project_link' => 'https://www.drupal.org/project/dashboards',
+      ]);
+      $output .= '</p>';
+
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_plugin_filter_CONSUMER_alter().
+ */
+function dashboards_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  if (!(is_a($extra['section_storage'], UserDashboardSectionStorage::class) || is_a($extra['section_storage'], DashboardSectionStorage::class))) {
+    return;
+  }
+  $notAllowed = ['field_block', 'extra_field_block'];
+  foreach ($definitions as $key => $def) {
+    if (in_array($def['id'], $notAllowed)) {
+      unset($definitions[$key]);
+    }
+  }
+  return $definitions;
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function dashboards_toolbar() {
+  $items['dashboards'] = [
+    '#cache' => [
+      'tags' => [
+        'config:dashboard_list',
+      ],
+      'contexts' => [
+        'user.permissions',
+      ],
+    ],
+  ];
+
+  $entityTypeManager = \Drupal::entityTypeManager();
+
+  /**
+   * @var \Drupal\dashboards\Entity\DashboardStorage
+   */
+  $storage = $entityTypeManager->getStorage('dashboard');
+  $boards = $storage->loadMultipleOrderedByWeight();
+  foreach ($boards as $key => $board) {
+    if (!$board->access('view', \Drupal::currentUser())) {
+      unset($boards[$key]);
+    }
+  }
+  if (count($boards) == 0) {
+    return $items;
+  }
+  $boards = array_values($boards);
+  $links = [];
+  foreach ($boards as $board) {
+    $link = $board->toLink($board->label())->toRenderable();
+    $links[] = $link;
+  }
+
+  $items['dashboards'] += [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Dashboards'),
+      '#url' => Url::fromRoute('<current>'),
+      '#attributes' => [
+        'class' => ['toolbar-icon', 'toolbar-menu-administration-dashboard'],
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Dashboards'),
+      'dashboards' => [
+        '#theme' => 'item_list',
+        '#list_type' => 'ul',
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+        '#items' => $links,
+      ],
+    ],
+    '#weight' => 150,
+    '#attached' => [
+      'library' => ['dashboards/core'],
+    ],
+  ];
+
+  return $items;
+}

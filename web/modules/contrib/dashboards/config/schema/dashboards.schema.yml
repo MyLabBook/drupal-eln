@@ -1,0 +1,23 @@
+dashboards.dashboard.*:
+  type: config_entity
+  label: 'Dashboard'
+  mapping:
+    id:
+      type: string
+      label: 'Machine Name'
+    admin_label:
+      type: string
+      label: 'Admin Label'
+    category:
+      type: string
+      label: 'Category'
+    frontend:
+      type: boolean
+      label: 'Frontend'
+    weight:
+      type: integer
+      label: 'Weight'
+    sections:
+      type: sequence
+      sequence:
+        type: layout_builder.section

@@ -1,0 +1,10 @@
+services:
+  front_page.event_subscriber:
+    class: Drupal\front_page\EventSubscriber\FrontPageSubscriber
+    tags:
+      - {name: event_subscriber}
+
+  front_page.front_page_path_processor:
+    class: Drupal\front_page\FrontPagePathProcessor
+    tags:
+      - {name: path_processor_outbound}
