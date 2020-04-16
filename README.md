@@ -1,8 +1,8 @@
 # MyLabBook
 
-An example of a Drupal based Electronic Lab Notebook (ELN)
+This repository contains all the code needed for a fully functional Electronic Lab Notebook (ELN) based on the Drupal CMS.
 
-This repository contains the code for a functional Electronic Lab Notebook based on the Drupal CMS.
+Note that this repository is in a format that makes it **very simple to install**. This is why we take the somewhat unorthodox approach of including the vendor folder as well as why a fixed database is used (which means fixed usernames and passwords, but which allow you to change as desired). This is the approach that many Drupal theme vendors use to ease the installation process. And **ease of installation is one of our primary goals**. If you are at all familiar with setting up a LAMP stack, then you should be able to install this fully working version in about 15 minutes or so. 
 
 ## Installation
 
