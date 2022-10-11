@@ -1,6 +1,6 @@
 # Drupal-ELN (Legacy MyLabBook)
 
-**We are moving from a Drupal based ELN to one based on [Oqtane](https://oqtane.org). We believe that Drupal remains a viable option for an ELN, but prefer the improved flexibility and speed of development available with Oqtane. We are leaving this repository as an example, but will not be updating it. Note that there are several security vulnerabilities in this code now, so we strongly recommend that this is used for development purposes only on a non-public URL.**
+**We are moving from a Drupal based ELN to one based on [WordPress](https://wordpress.org) and [Oqtane](https://oqtane.org). We believe that Drupal remains a viable option for an ELN, but prefer the improved flexibility and speed of development available with WordPress and Oqtane. We are leaving this repository as an example, but will not be updating it. Note that there are several security vulnerabilities in this code now, so we strongly recommend that this is used for development purposes only on a non-public URL.**
 
 This repository contains all the code needed for a fully functional Electronic Lab Notebook (ELN) based on the Drupal CMS.
 
